@@ -1,0 +1,1272 @@
+{
+ "schema": 2,
+ "name": "As is",
+ "createdAt": "2026-10-08T19:00:00-03:00",
+ "settings": {
+  "view": "tree",
+  "bu": "payments",
+  "showScope": true,
+  "showLinks": true,
+  "filter": "all"
+ },
+ "bus": [
+  {
+   "id": "payments",
+   "name": "Payments",
+   "color": "#2f9e6e"
+  },
+  {
+   "id": "b2b",
+   "name": "B2B",
+   "color": "#3b7ddd"
+  },
+  {
+   "id": "ads",
+   "name": "Ads",
+   "color": "#d9822b"
+  },
+  {
+   "id": "pp",
+   "name": "Integração PP",
+   "color": "#9b5de5"
+  },
+  {
+   "id": "chat",
+   "name": "Chat",
+   "color": "#14a3a3"
+  },
+  {
+   "id": "social",
+   "name": "Social",
+   "color": "#d6457a"
+  }
+ ],
+ "nodes": [
+  {
+   "id": "anderson",
+   "parent": null,
+   "name": "Anderson Chamon",
+   "role": "CEO Brasil",
+   "scope": "Lidera a operação e as BUs no Brasil",
+   "country": "BR",
+   "status": "ok",
+   "kind": "person",
+   "count": null,
+   "links": [],
+   "collapsed": false,
+   "bus": "all"
+  },
+  {
+   "id": "luiz",
+   "parent": "anderson",
+   "name": "Luiz Parussolo",
+   "role": "BUs Leader · Chat & Social",
+   "scope": "Lidera as BUs de Chat e Social",
+   "country": "BR",
+   "status": "ok",
+   "kind": "person",
+   "count": null,
+   "links": [],
+   "collapsed": false,
+   "bus": [
+    "chat",
+    "social"
+   ]
+  },
+  {
+   "id": "gabriel",
+   "parent": "luiz",
+   "name": "Gabriel Bueno",
+   "role": "Head of Data",
+   "scope": "Dados e análise de negócio de Chat e Social",
+   "country": "BR",
+   "status": "ok",
+   "kind": "person",
+   "count": null,
+   "links": [],
+   "collapsed": false,
+   "bus": [
+    "chat",
+    "social"
+   ]
+  },
+  {
+   "id": "marcus",
+   "parent": "gabriel",
+   "name": "Marcus Tomazzeti",
+   "role": "Data / Business Analyst",
+   "scope": "Análises da BU de Chat",
+   "country": "BR",
+   "status": "ok",
+   "kind": "person",
+   "count": null,
+   "links": [],
+   "collapsed": false,
+   "bus": [
+    "chat"
+   ]
+  },
+  {
+   "id": "olivia",
+   "parent": "gabriel",
+   "name": "Olivia Domingues",
+   "role": "Data / Business Analyst",
+   "scope": "Análises da BU de Social",
+   "country": "BR",
+   "status": "ok",
+   "kind": "person",
+   "count": null,
+   "links": [],
+   "collapsed": false,
+   "bus": [
+    "social"
+   ]
+  },
+  {
+   "id": "data1",
+   "parent": "gabriel",
+   "name": "",
+   "role": "Specialist · Data",
+   "scope": "Análises da BU de Chat",
+   "country": "BR",
+   "status": "open",
+   "kind": "person",
+   "count": null,
+   "links": [],
+   "collapsed": false,
+   "bus": [
+    "chat"
+   ]
+  },
+  {
+   "id": "data2",
+   "parent": "gabriel",
+   "name": "",
+   "role": "Specialist · Data",
+   "scope": "Análises da BU de Social",
+   "country": "BR",
+   "status": "open",
+   "kind": "person",
+   "count": null,
+   "links": [],
+   "collapsed": false,
+   "bus": [
+    "social"
+   ]
+  },
+  {
+   "id": "hopbr",
+   "parent": "luiz",
+   "name": "",
+   "role": "Head of Product · Senior Manager",
+   "scope": "Produto de Chat e Social",
+   "country": "BR",
+   "status": "open",
+   "kind": "person",
+   "count": null,
+   "links": [],
+   "collapsed": false,
+   "bus": [
+    "chat",
+    "social"
+   ]
+  },
+  {
+   "id": "hopcn",
+   "parent": "luiz",
+   "name": "",
+   "role": "Head of Product · Senior Manager",
+   "scope": "Produto de Chat e Social",
+   "country": "CN",
+   "status": "open",
+   "kind": "person",
+   "count": null,
+   "links": [],
+   "collapsed": false,
+   "bus": [
+    "chat",
+    "social"
+   ]
+  },
+  {
+   "id": "buchat",
+   "parent": "luiz",
+   "name": "BU Chat",
+   "role": "Product Managers",
+   "scope": "IM, conta, segurança e privacidade",
+   "country": "BRCN",
+   "status": "ok",
+   "kind": "bu",
+   "count": null,
+   "links": [],
+   "collapsed": false,
+   "bus": [
+    "chat"
+   ]
+  },
+  {
+   "id": "lili",
+   "parent": "buchat",
+   "name": "Lili Schneider",
+   "role": "Product Manager",
+   "scope": "",
+   "country": "BR",
+   "status": "ok",
+   "kind": "person",
+   "count": null,
+   "links": [],
+   "collapsed": false,
+   "bus": [
+    "chat"
+   ]
+  },
+  {
+   "id": "thiago",
+   "parent": "buchat",
+   "name": "Thiago Matheus",
+   "role": "Product Manager",
+   "scope": "",
+   "country": "BR",
+   "status": "ok",
+   "kind": "person",
+   "count": null,
+   "links": [],
+   "collapsed": false,
+   "bus": [
+    "chat"
+   ]
+  },
+  {
+   "id": "heather",
+   "parent": "buchat",
+   "name": "Heather",
+   "role": "Product Manager",
+   "scope": "",
+   "country": "CN",
+   "status": "ok",
+   "kind": "person",
+   "count": null,
+   "links": [],
+   "collapsed": false,
+   "bus": [
+    "chat"
+   ]
+  },
+  {
+   "id": "ester",
+   "parent": "buchat",
+   "name": "Ester",
+   "role": "Product Manager",
+   "scope": "",
+   "country": "CN",
+   "status": "ok",
+   "kind": "person",
+   "count": null,
+   "links": [],
+   "collapsed": false,
+   "bus": [
+    "chat"
+   ]
+  },
+  {
+   "id": "pmchat",
+   "parent": "buchat",
+   "name": "",
+   "role": "Product Manager · Senior",
+   "scope": "",
+   "country": "CN",
+   "status": "open",
+   "kind": "person",
+   "count": null,
+   "links": [],
+   "collapsed": false,
+   "bus": [
+    "chat"
+   ]
+  },
+  {
+   "id": "busocial",
+   "parent": "luiz",
+   "name": "BU Social",
+   "role": "Product Managers",
+   "scope": "Produtos sociais",
+   "country": "BRCN",
+   "status": "ok",
+   "kind": "bu",
+   "count": null,
+   "links": [],
+   "collapsed": false,
+   "bus": [
+    "social"
+   ]
+  },
+  {
+   "id": "daniel",
+   "parent": "busocial",
+   "name": "Daniel Nagahata",
+   "role": "Product Manager",
+   "scope": "",
+   "country": "BR",
+   "status": "ok",
+   "kind": "person",
+   "count": null,
+   "links": [],
+   "collapsed": false,
+   "bus": [
+    "social"
+   ]
+  },
+  {
+   "id": "gabriella",
+   "parent": "busocial",
+   "name": "Gabriella Gomes",
+   "role": "Product Manager",
+   "scope": "",
+   "country": "BR",
+   "status": "ok",
+   "kind": "person",
+   "count": null,
+   "links": [],
+   "collapsed": false,
+   "bus": [
+    "social"
+   ]
+  },
+  {
+   "id": "simon",
+   "parent": "busocial",
+   "name": "Simon",
+   "role": "Product Manager",
+   "scope": "",
+   "country": "CN",
+   "status": "ok",
+   "kind": "person",
+   "count": null,
+   "links": [],
+   "collapsed": false,
+   "bus": [
+    "social"
+   ]
+  },
+  {
+   "id": "joey",
+   "parent": "busocial",
+   "name": "Joey",
+   "role": "Product Manager",
+   "scope": "",
+   "country": "CN",
+   "status": "ok",
+   "kind": "person",
+   "count": null,
+   "links": [],
+   "collapsed": false,
+   "bus": [
+    "social"
+   ]
+  },
+  {
+   "id": "bayer",
+   "parent": "luiz",
+   "name": "Fillip Bayer",
+   "role": "Head of Design",
+   "scope": "Design de produto; atende as BUs do Gustavo via Diego",
+   "country": "BR",
+   "status": "ok",
+   "kind": "person",
+   "count": null,
+   "links": [],
+   "collapsed": false,
+   "bus": [
+    "chat",
+    "social"
+   ]
+  },
+  {
+   "id": "isabella",
+   "parent": "bayer",
+   "name": "Isabella Gomes",
+   "role": "Product Designer",
+   "scope": "Design de Chat",
+   "country": "BR",
+   "status": "ok",
+   "kind": "person",
+   "count": null,
+   "links": [],
+   "collapsed": false,
+   "bus": [
+    "chat"
+   ]
+  },
+  {
+   "id": "renato",
+   "parent": "bayer",
+   "name": "Renato Silveira",
+   "role": "Product Designer",
+   "scope": "Design de Chat",
+   "country": "BR",
+   "status": "ok",
+   "kind": "person",
+   "count": null,
+   "links": [],
+   "collapsed": false,
+   "bus": [
+    "chat"
+   ]
+  },
+  {
+   "id": "kaio",
+   "parent": "bayer",
+   "name": "Kaio Santann'a",
+   "role": "Product Designer",
+   "scope": "Design de Social",
+   "country": "BR",
+   "status": "ok",
+   "kind": "person",
+   "count": null,
+   "links": [],
+   "collapsed": false,
+   "bus": [
+    "social"
+   ]
+  },
+  {
+   "id": "will",
+   "parent": "bayer",
+   "name": "Will",
+   "role": "Product Designer",
+   "scope": "Design de Social",
+   "country": "CN",
+   "status": "ok",
+   "kind": "person",
+   "count": null,
+   "links": [],
+   "collapsed": false,
+   "bus": [
+    "social"
+   ]
+  },
+  {
+   "id": "dsoc",
+   "parent": "bayer",
+   "name": "",
+   "role": "Product Designer · Senior",
+   "scope": "Design de Social",
+   "country": "BR",
+   "status": "open",
+   "kind": "person",
+   "count": null,
+   "links": [],
+   "collapsed": false,
+   "bus": [
+    "social"
+   ]
+  },
+  {
+   "id": "diego",
+   "parent": "bayer",
+   "name": "Diego Rufino",
+   "role": "Product Designer",
+   "scope": "Atende horizontalmente as BUs do Gustavo",
+   "country": "BR",
+   "status": "ok",
+   "kind": "person",
+   "count": null,
+   "links": [
+    "gustavo"
+   ],
+   "collapsed": false,
+   "bus": [
+    "b2b",
+    "payments",
+    "ads",
+    "pp"
+   ]
+  },
+  {
+   "id": "dpay",
+   "parent": "bayer",
+   "name": "",
+   "role": "Product Designer · Especialista",
+   "scope": "Design de Payments",
+   "country": "BR",
+   "status": "open",
+   "kind": "person",
+   "count": null,
+   "links": [],
+   "collapsed": false,
+   "bus": [
+    "payments"
+   ]
+  },
+  {
+   "id": "dpic",
+   "parent": "bayer",
+   "name": "",
+   "role": "Product Designer · Especialista",
+   "scope": "Design da integração PicPay",
+   "country": "BR",
+   "status": "open",
+   "kind": "person",
+   "count": null,
+   "links": [],
+   "collapsed": false,
+   "bus": [
+    "pp"
+   ]
+  },
+  {
+   "id": "techsr",
+   "parent": "luiz",
+   "name": "",
+   "role": "Senior Manager · Tech",
+   "scope": "Posição em discussão para Chat e Social",
+   "country": "BRCN",
+   "status": "new",
+   "kind": "person",
+   "count": null,
+   "links": [],
+   "collapsed": false,
+   "bus": [
+    "chat",
+    "social"
+   ]
+  },
+  {
+   "id": "gustavo",
+   "parent": "anderson",
+   "name": "Gustavo Resende",
+   "role": "BUs Leader · B2B, Payments, Shop & Ads",
+   "scope": "Lidera B2B, Payments, Shop, Ads e integração PicPay",
+   "country": "BR",
+   "status": "ok",
+   "kind": "person",
+   "count": null,
+   "links": [],
+   "collapsed": false,
+   "bus": [
+    "b2b",
+    "payments",
+    "ads",
+    "pp"
+   ]
+  },
+  {
+   "id": "pedro",
+   "parent": "gustavo",
+   "name": "Pedro Bettani",
+   "role": "Gerente Executivo de B2B & Payments",
+   "scope": "Estratégia, roadmap e especificação de B2B, Payments e PicPay",
+   "country": "BR",
+   "status": "ok",
+   "kind": "person",
+   "count": null,
+   "links": [
+    "henry"
+   ],
+   "collapsed": false,
+   "bus": [
+    "b2b",
+    "payments",
+    "pp"
+   ]
+  },
+  {
+   "id": "luciana",
+   "parent": "pedro",
+   "name": "Luciana Geromel",
+   "role": "Gerente de Produtos · Payments",
+   "scope": "Roadmap e especificação de pagamentos",
+   "country": "BR",
+   "status": "ok",
+   "kind": "person",
+   "count": null,
+   "links": [],
+   "collapsed": false,
+   "bus": [
+    "payments"
+   ]
+  },
+  {
+   "id": "gleison",
+   "parent": "pedro",
+   "name": "Gleison Silva",
+   "role": "Gerente de Soluções e Parcerias",
+   "scope": "Soluções e parcerias para B2B e Payments",
+   "country": "BR",
+   "status": "ok",
+   "kind": "person",
+   "count": null,
+   "links": [],
+   "collapsed": false,
+   "bus": [
+    "b2b",
+    "payments"
+   ]
+  },
+  {
+   "id": "cristiano",
+   "parent": "gleison",
+   "name": "Cristiano Saito",
+   "role": "Solution Architect",
+   "scope": "Arquitetura de soluções e integração de MiniApps",
+   "country": "BR",
+   "status": "ok",
+   "kind": "person",
+   "count": null,
+   "links": [],
+   "collapsed": false,
+   "bus": [
+    "b2b"
+   ]
+  },
+  {
+   "id": "solteam",
+   "parent": "cristiano",
+   "name": "Time de Soluções",
+   "role": "3 júniores e 1 estagiário",
+   "scope": "Implementação de soluções com parceiros",
+   "country": "BR",
+   "status": "ok",
+   "kind": "team",
+   "count": 4,
+   "links": [],
+   "collapsed": false,
+   "bus": [
+    "b2b"
+   ]
+  },
+  {
+   "id": "vitor",
+   "parent": "pedro",
+   "name": "Vitor Mozer",
+   "role": "Product Manager · B2B",
+   "scope": "MiniApps e Open Platform",
+   "country": "BR",
+   "status": "ok",
+   "kind": "person",
+   "count": null,
+   "links": [],
+   "collapsed": false,
+   "bus": [
+    "b2b"
+   ]
+  },
+  {
+   "id": "espb2b",
+   "parent": "pedro",
+   "name": "",
+   "role": "Especialista de Produto · B2B",
+   "scope": "Produto e dados de B2B",
+   "country": "BR",
+   "status": "new",
+   "kind": "person",
+   "count": null,
+   "links": [],
+   "collapsed": false,
+   "bus": [
+    "b2b"
+   ]
+  },
+  {
+   "id": "picpay",
+   "parent": "pedro",
+   "name": "Integração PicPay",
+   "role": "Time de integração",
+   "scope": "Integração entre PhizChat e PicPay",
+   "country": "BR",
+   "status": "ok",
+   "kind": "bu",
+   "count": null,
+   "links": [],
+   "collapsed": false,
+   "bus": [
+    "pp"
+   ]
+  },
+  {
+   "id": "kenji",
+   "parent": "picpay",
+   "name": "Kenji Soares",
+   "role": "Head of Tech · Integração PicPay",
+   "scope": "Lidera a integração técnica com o PicPay",
+   "country": "BR",
+   "status": "ok",
+   "kind": "person",
+   "count": null,
+   "links": [],
+   "collapsed": false,
+   "bus": [
+    "pp"
+   ]
+  },
+  {
+   "id": "vitorr",
+   "parent": "kenji",
+   "name": "Vitor de Rezende",
+   "role": "Chat Integration",
+   "scope": "Integração de chat com o PicPay",
+   "country": "BR",
+   "status": "ok",
+   "kind": "person",
+   "count": null,
+   "links": [],
+   "collapsed": false,
+   "bus": [
+    "pp"
+   ]
+  },
+  {
+   "id": "picteam",
+   "parent": "kenji",
+   "name": "Time de integração",
+   "role": "6 pessoas e 5 vagas",
+   "scope": "Desenvolvimento da integração PicPay",
+   "country": "BR",
+   "status": "ok",
+   "kind": "team",
+   "count": 6,
+   "links": [],
+   "collapsed": false,
+   "bus": [
+    "pp"
+   ]
+  },
+  {
+   "id": "pmpic",
+   "parent": "picpay",
+   "name": "",
+   "role": "Product Manager · Especialista",
+   "scope": "Produto da integração PicPay",
+   "country": "BR",
+   "status": "open",
+   "kind": "person",
+   "count": null,
+   "links": [],
+   "collapsed": false,
+   "bus": [
+    "pp"
+   ]
+  },
+  {
+   "id": "shopads",
+   "parent": "gustavo",
+   "name": "BU Shop + Ads",
+   "role": "A construir",
+   "scope": "Estrutura em definição",
+   "country": "BR",
+   "status": "new",
+   "kind": "bu",
+   "count": null,
+   "links": [],
+   "collapsed": false,
+   "bus": [
+    "ads"
+   ]
+  },
+  {
+   "id": "shopsm",
+   "parent": "shopads",
+   "name": "",
+   "role": "Business & Product · Senior Manager",
+   "scope": "Negócio e produto de Shop + Ads",
+   "country": "BR",
+   "status": "new",
+   "kind": "person",
+   "count": null,
+   "links": [],
+   "collapsed": false,
+   "bus": [
+    "ads"
+   ]
+  },
+  {
+   "id": "shoppm",
+   "parent": "shopads",
+   "name": "",
+   "role": "Product Manager · Especialista",
+   "scope": "Produto de Shop + Ads",
+   "country": "BR",
+   "status": "new",
+   "kind": "person",
+   "count": null,
+   "links": [],
+   "collapsed": false,
+   "bus": [
+    "ads"
+   ]
+  },
+  {
+   "id": "raphael",
+   "parent": null,
+   "name": "Raphael Rodrigues",
+   "role": "Board Member & Co-CEO",
+   "scope": "Conselho, co-liderança da companhia e eixo de tecnologia",
+   "country": "BR",
+   "status": "ok",
+   "kind": "person",
+   "count": null,
+   "links": [],
+   "collapsed": false,
+   "bus": "all"
+  },
+  {
+   "id": "louis",
+   "parent": "raphael",
+   "name": "Louis Wong",
+   "role": "CTO",
+   "scope": "Lidera R&D e a execução de todas as BUs",
+   "country": "CN",
+   "status": "ok",
+   "kind": "person",
+   "count": null,
+   "links": [],
+   "collapsed": false,
+   "bus": "all"
+  },
+  {
+   "id": "henry",
+   "parent": "louis",
+   "name": "Henry Wu",
+   "role": "Head of Product",
+   "scope": "Backlog e entrega de B2B, Payments e Shop + Ads",
+   "country": "CN",
+   "status": "ok",
+   "kind": "person",
+   "count": null,
+   "links": [],
+   "collapsed": false,
+   "bus": [
+    "b2b",
+    "payments",
+    "ads"
+   ]
+  },
+  {
+   "id": "raven",
+   "parent": "henry",
+   "name": "Raven",
+   "role": "Product Owner · B2B",
+   "scope": "",
+   "country": "CN",
+   "status": "ok",
+   "kind": "person",
+   "count": null,
+   "links": [],
+   "collapsed": false,
+   "bus": [
+    "b2b"
+   ]
+  },
+  {
+   "id": "pob2b",
+   "parent": "henry",
+   "name": "",
+   "role": "Product Owner · Senior · B2B",
+   "scope": "",
+   "country": "CN",
+   "status": "open",
+   "kind": "person",
+   "count": null,
+   "links": [],
+   "collapsed": false,
+   "bus": [
+    "b2b"
+   ]
+  },
+  {
+   "id": "jason",
+   "parent": "henry",
+   "name": "Jason Ou",
+   "role": "Product Owner · Payments",
+   "scope": "",
+   "country": "CN",
+   "status": "ok",
+   "kind": "person",
+   "count": null,
+   "links": [],
+   "collapsed": false,
+   "bus": [
+    "payments"
+   ]
+  },
+  {
+   "id": "aron",
+   "parent": "henry",
+   "name": "Aron",
+   "role": "Product Owner · Payments",
+   "scope": "",
+   "country": "CN",
+   "status": "ok",
+   "kind": "person",
+   "count": null,
+   "links": [],
+   "collapsed": false,
+   "bus": [
+    "payments"
+   ]
+  },
+  {
+   "id": "poshop",
+   "parent": "henry",
+   "name": "",
+   "role": "Product Owner · Shop + Ads",
+   "scope": "",
+   "country": "CN",
+   "status": "new",
+   "kind": "person",
+   "count": null,
+   "links": [],
+   "collapsed": false,
+   "bus": [
+    "ads"
+   ]
+  },
+  {
+   "id": "neo",
+   "parent": "louis",
+   "name": "Neo",
+   "role": "Product Owner · Chat & Social",
+   "scope": "Backlog e entrega de Chat e Social",
+   "country": "CN",
+   "status": "ok",
+   "kind": "person",
+   "count": null,
+   "links": [],
+   "collapsed": false,
+   "bus": [
+    "chat",
+    "social"
+   ]
+  },
+  {
+   "id": "vera",
+   "parent": "louis",
+   "name": "Vera Lu",
+   "role": "Head of Project Management",
+   "scope": "Gestão de projetos de R&D; cobre Chat",
+   "country": "CN",
+   "status": "ok",
+   "kind": "person",
+   "count": null,
+   "links": [],
+   "collapsed": false,
+   "bus": "all"
+  },
+  {
+   "id": "summer",
+   "parent": "vera",
+   "name": "Summer Chen",
+   "role": "Project Manager · Social",
+   "scope": "",
+   "country": "CN",
+   "status": "ok",
+   "kind": "person",
+   "count": null,
+   "links": [],
+   "collapsed": false,
+   "bus": [
+    "social"
+   ]
+  },
+  {
+   "id": "richard",
+   "parent": "vera",
+   "name": "Richard Liang",
+   "role": "Project Manager · B2B",
+   "scope": "",
+   "country": "CN",
+   "status": "ok",
+   "kind": "person",
+   "count": null,
+   "links": [],
+   "collapsed": false,
+   "bus": [
+    "b2b"
+   ]
+  },
+  {
+   "id": "zakir",
+   "parent": "vera",
+   "name": "Zakir Haroon Javali",
+   "role": "Project Manager · Payments",
+   "scope": "",
+   "country": "CN",
+   "status": "ok",
+   "kind": "person",
+   "count": null,
+   "links": [],
+   "collapsed": false,
+   "bus": [
+    "payments"
+   ]
+  },
+  {
+   "id": "zed",
+   "parent": "louis",
+   "name": "Zed Gu",
+   "role": "Head of Front-end",
+   "scope": "Front-end de todas as BUs; lidera engenharia de B2B & Payments",
+   "country": "CN",
+   "status": "ok",
+   "kind": "person",
+   "count": 48,
+   "links": [
+    "pedro"
+   ],
+   "collapsed": false,
+   "bus": "all"
+  },
+  {
+   "id": "mxthing",
+   "parent": "zed",
+   "name": "Mxthing Mei",
+   "role": "Front-end Lead · Chat",
+   "scope": "",
+   "country": "CN",
+   "status": "ok",
+   "kind": "person",
+   "count": null,
+   "links": [],
+   "collapsed": false,
+   "bus": [
+    "chat"
+   ]
+  },
+  {
+   "id": "kai",
+   "parent": "zed",
+   "name": "Kai Wu",
+   "role": "Front-end Lead · Social",
+   "scope": "",
+   "country": "CN",
+   "status": "ok",
+   "kind": "person",
+   "count": null,
+   "links": [],
+   "collapsed": false,
+   "bus": [
+    "social"
+   ]
+  },
+  {
+   "id": "feb2b",
+   "parent": "zed",
+   "name": "",
+   "role": "Front-end Lead · B2B & Payments",
+   "scope": "",
+   "country": "CN",
+   "status": "open",
+   "kind": "person",
+   "count": null,
+   "links": [],
+   "collapsed": false,
+   "bus": [
+    "b2b",
+    "payments"
+   ]
+  },
+  {
+   "id": "leo",
+   "parent": "louis",
+   "name": "Leo Gong",
+   "role": "Head of Back-end",
+   "scope": "Back-end de todas as BUs",
+   "country": "CN",
+   "status": "ok",
+   "kind": "person",
+   "count": 58,
+   "links": [],
+   "collapsed": false,
+   "bus": "all"
+  },
+  {
+   "id": "rancho",
+   "parent": "leo",
+   "name": "Rancho Zhang",
+   "role": "Back-end Lead · Chat",
+   "scope": "",
+   "country": "CN",
+   "status": "ok",
+   "kind": "person",
+   "count": null,
+   "links": [],
+   "collapsed": false,
+   "bus": [
+    "chat"
+   ]
+  },
+  {
+   "id": "haycco",
+   "parent": "leo",
+   "name": "Haycco",
+   "role": "Back-end Lead · Social",
+   "scope": "",
+   "country": "CN",
+   "status": "ok",
+   "kind": "person",
+   "count": null,
+   "links": [],
+   "collapsed": false,
+   "bus": [
+    "social"
+   ]
+  },
+  {
+   "id": "thomas",
+   "parent": "leo",
+   "name": "Thomas Zhai",
+   "role": "Back-end Lead · B2B & Payments",
+   "scope": "",
+   "country": "CN",
+   "status": "ok",
+   "kind": "person",
+   "count": null,
+   "links": [],
+   "collapsed": false,
+   "bus": [
+    "b2b",
+    "payments"
+   ]
+  },
+  {
+   "id": "neil",
+   "parent": "louis",
+   "name": "Neil Liang",
+   "role": "Data Platform",
+   "scope": "Plataforma de dados de todas as BUs",
+   "country": "CN",
+   "status": "ok",
+   "kind": "person",
+   "count": null,
+   "links": [],
+   "collapsed": false,
+   "bus": "all"
+  },
+  {
+   "id": "sun",
+   "parent": "louis",
+   "name": "Sun Yu",
+   "role": "Head of QA",
+   "scope": "Qualidade de todas as BUs; cobre Chat e Social",
+   "country": "CN",
+   "status": "ok",
+   "kind": "person",
+   "count": 17,
+   "links": [],
+   "collapsed": false,
+   "bus": "all"
+  },
+  {
+   "id": "katie",
+   "parent": "sun",
+   "name": "Katie Kang",
+   "role": "QA Lead · B2B & Payments",
+   "scope": "",
+   "country": "CN",
+   "status": "ok",
+   "kind": "person",
+   "count": null,
+   "links": [],
+   "collapsed": false,
+   "bus": [
+    "b2b",
+    "payments"
+   ]
+  },
+  {
+   "id": "rd",
+   "parent": "louis",
+   "name": "R&D por BU",
+   "role": "Headcount de engenharia",
+   "scope": "Times de desenvolvimento por BU",
+   "country": "CN",
+   "status": "ok",
+   "kind": "bu",
+   "count": null,
+   "links": [],
+   "collapsed": false,
+   "bus": "all"
+  },
+  {
+   "id": "rdchat",
+   "parent": "rd",
+   "name": "R&D Chat",
+   "role": "Engenharia",
+   "scope": "",
+   "country": "CN",
+   "status": "ok",
+   "kind": "team",
+   "count": 38,
+   "links": [],
+   "collapsed": false,
+   "bus": [
+    "chat"
+   ]
+  },
+  {
+   "id": "rdsoc",
+   "parent": "rd",
+   "name": "R&D Social",
+   "role": "Engenharia",
+   "scope": "",
+   "country": "CN",
+   "status": "ok",
+   "kind": "team",
+   "count": 33,
+   "links": [],
+   "collapsed": false,
+   "bus": [
+    "social"
+   ]
+  },
+  {
+   "id": "rdb2b",
+   "parent": "rd",
+   "name": "R&D B2B",
+   "role": "Engenharia",
+   "scope": "",
+   "country": "CN",
+   "status": "ok",
+   "kind": "team",
+   "count": 17,
+   "links": [],
+   "collapsed": false,
+   "bus": [
+    "b2b"
+   ]
+  },
+  {
+   "id": "rdpay",
+   "parent": "rd",
+   "name": "R&D Payments",
+   "role": "Engenharia",
+   "scope": "",
+   "country": "CN",
+   "status": "ok",
+   "kind": "team",
+   "count": 19,
+   "links": [],
+   "collapsed": false,
+   "bus": [
+    "payments"
+   ]
+  },
+  {
+   "id": "rdshop",
+   "parent": "rd",
+   "name": "R&D Shop + Ads",
+   "role": "A definir",
+   "scope": "",
+   "country": "CN",
+   "status": "new",
+   "kind": "team",
+   "count": null,
+   "links": [],
+   "collapsed": false,
+   "bus": [
+    "ads"
+   ]
+  }
+ ],
+ "shapes": []
+}
