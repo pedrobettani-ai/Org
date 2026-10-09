@@ -16,12 +16,18 @@ Acesse o endereço do GitHub Pages deste repositório. O site abre em modo apres
 
 ## Visão por BU
 
-Escolha **Por BU** e a BU (ou **Todas**, que coloca as BUs lado a lado). Cada BU vira um bloco com Brasil à esquerda e China à direita. Aparece só quem tem o rótulo da BU, ligado ao chefe mais próximo que também é da BU; quando o chefe real ficou de fora, o card mostra "↳ reporta a …". Quem atende todas as BUs fica numa faixa no topo, e as relações funcionais entre Brasil e China aparecem como linha pontilhada. Quem tem duas BUs aparece no desenho de cada uma.
+Escolha **Por BU** e a BU (ou **Todas**, que coloca as BUs lado a lado). Aparece **só quem tem o rótulo da BU**, num organograma conectado:
+
+- Cada pessoa se liga ao chefe mais próximo que também tem o rótulo (linha contínua).
+- Quem fica sem chefe na BU se liga ao seu par de relação funcional na BU (linha pontilhada) ou, se não tiver, ao líder do seu lado, Brasil ou China (linha tracejada).
+- O card mostra o chefe real ("↳ reporta a …") sempre que a ligação na BU for diferente do reporte.
+- Para ajustar uma ligação, use "Visão por BU · ligar a" no painel do card.
+
+A visão é calculada a partir dos rótulos: quem você rotular passa a aparecer automaticamente. Quem tem duas BUs aparece nas duas.
 
 ## Opções de exibição (menu Exibir)
 
 - **Visão matricial:** mostra cada card junto do par definido em "Visão matricial · exibir junto de", com linha pontilhada. O reporte real aparece no card.
-- **Liderança transversal na visão por BU:** mostra ou esconde a faixa com quem atende todas as BUs.
 - **Unir blocos:** junta Brasil, China e simulações num desenho só, sem molduras.
 
 ## Como publicar uma nova versão

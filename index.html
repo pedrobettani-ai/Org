@@ -209,6 +209,7 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid 
 .card.mini .c-role{font-size:11.5px;-webkit-line-clamp:1}
 .card.mini .c-count{font-size:22px;top:26px;right:11px}
 .card.mini .cbtns{display:none}
+.lines path.bulink{stroke-dasharray:7 5}
 .lines path.func{stroke:var(--link);stroke-dasharray:2 5;stroke-linecap:round;stroke-width:1.8;opacity:.85}
 /* v3: blocks, columns, matrix */
 .band.sim{border:1.5px dashed var(--accent);background:color-mix(in srgb,var(--accent) 5%,var(--band))}
@@ -322,7 +323,6 @@ circle.shp-h.end{fill:#fff;stroke:#3b7ddd;stroke-width:2;pointer-events:all;curs
         <label class="tog"><input type="checkbox" id="optLinks"> Carimbos de relação funcional</label>
         <hr>
         <label class="tog"><input type="checkbox" id="optMatrix"> Visão matricial<small>Mostra cada time junto do par funcional definido no card. O reporte real aparece no card.</small></label>
-        <label class="tog"><input type="checkbox" id="optBuTrans"> Liderança transversal na visão por BU<small>Faixa no topo de cada BU com quem atende todas as BUs.</small></label>
         <label class="tog"><input type="checkbox" id="optMerge"> Unir blocos<small>Brasil, China e simulações num desenho só, sem molduras.</small></label>
       </div></div>
   </div>
@@ -392,6 +392,7 @@ circle.shp-h.end{fill:#fff;stroke:#3b7ddd;stroke-width:2;pointer-events:all;curs
       <div class="fld"><label for="fCount">Headcount</label><input type="number" id="fCount" min="0" placeholder="—"></div>
     </div>
     <div class="fld"><label for="fParent">Reporta a</label><select id="fParent"></select></div>
+    <div class="fld"><label for="fBuUnder">Visão por BU · ligar a</label><select id="fBuUnder"></select><span class="help">Quem fica sem chefe na BU se liga ao par funcional ou ao líder do lado. Escolha aqui para ajustar.</span></div>
     <div class="fld"><label for="fUnder">Visão matricial · exibir junto de</label><select id="fUnder"></select><span class="help">Só muda o desenho com Exibir → Visão matricial ligada. O reporte real continua o mesmo.</span></div>
     <div class="fld"><label for="fLinkAdd">Relações funcionais</label><div class="chips" id="fLinks"></div><select id="fLinkAdd"></select><span class="help">Viram carimbos com as iniciais nos dois cards, sem linha de reporte.</span></div>
     <div id="confirmBox"></div>
@@ -475,7 +476,7 @@ function initials(n){var w=(n.name||'').trim().split(/\s+/).filter(Boolean);if(!
 function stampList(n){return S.settings.showLinks?funcOf(n.id).map(function(id){var p=byId.get(id);return{id:id,ini:initials(p),name:label(p)}}):[]}
 function isDim(n){var f=S.settings.filter;return f!=='all'&&!(n.country===f||n.country==='BRCN')}
 function tagList(n,o){var t=n.bus==='all'?[{name:'Todas as BUs',color:null}]:(Array.isArray(n.bus)?n.bus:[]).map(function(b){var d=busById.get(b);return d?{name:d.name,color:d.color}:null}).filter(Boolean);
-  if(o&&o.sc&&o.sc.bu){var rp=o.sc.rep&&o.sc.rep.get(o.key);if(rp)t.unshift({name:'↳ reporta a '+rp,color:null,rep:true});return t}
+  if(o&&o.sc&&o.sc.bu){var rp=o.sc.rep&&o.sc.rep.get(o.key);return rp?[{name:'↳ reporta a '+rp,color:null,rep:true}]:[]}
   if(moved(n)){var p=byId.get(n.parent);t.unshift({name:'↳ reporta a '+(p?label(p):'—'),color:null,rep:true})}return t}
 
 /* history */
@@ -579,37 +580,34 @@ function layoutRoot(r,inc,kf,kp){
 function buSets(bu){var m=new Set();S.nodes.forEach(function(n){if(inBU(n,bu))m.add(n.id)});var inc=new Set(m);m.forEach(function(id){vancestors(id).forEach(function(a){inc.add(a)})});return{inc:inc,match:m}}
 function addLayout(sc,L,ox,oy){L.cards.forEach(function(c){c.x+=ox;c.y+=oy;sc.cards.push(c)});L.paths.forEach(function(p){p.pts=p.pts.map(function(q){return[q[0]+ox,q[1]+oy]});sc.paths.push(p)})}
 var MW=210,MH=78,MG=10,SIDEGAP=64,SUBPAD=18,SUBTOP=40,STRIPTOP=26;
-function buBlockLayout(bu,kp){
+function buTree(bu){
   var matched=new Set();S.nodes.forEach(function(n){if(Array.isArray(n.bus)&&n.bus.indexOf(bu)>=0)matched.add(n.id)});
-  var bk=new Map(),rep=new Map();
-  matched.forEach(function(id){var n=byId.get(id),p=n.parent;while(p&&!matched.has(p)){var pn=byId.get(p);p=pn?pn.parent:null}
-    if((p||null)!==(n.parent||null)&&n.parent&&byId.get(n.parent))rep.set(kp+id,label(byId.get(n.parent)));
-    var k=p||'__root';if(!bk.has(k))bk.set(k,[]);bk.get(k).push(id)});
-  bk.forEach(function(a){a.sort(function(x,y){return(order.get(x)||0)-(order.get(y)||0)})});
-  var kf=function(id){return bk.get(id)||[]};
-  var sides={BR:{roots:[],trans:[]},CN:{roots:[],trans:[]}};
-  kf('__root').slice().sort(function(a,b){return depth(a)-depth(b)||(order.get(a)||0)-(order.get(b)||0)}).forEach(function(r){sides[byId.get(r).country==='CN'?'CN':'BR'].roots.push(r)});
-  if(S.settings.buTrans!==false)S.nodes.filter(function(n){return n.bus==='all'&&n.kind!=='bu'}).sort(function(a,b){return(order.get(a.id)||0)-(order.get(b.id)||0)}).forEach(function(n){sides[n.country==='CN'?'CN':'BR'].trans.push(n.id)});
-  var out={cards:[],paths:[],bands:[],rep:rep,count:matched.size},x=0,hmax=0;
-  ['BR','CN'].forEach(function(sk){var sd=sides[sk];if(!sd.roots.length)return;
-    var Ls=sd.roots.map(function(r){return layoutRoot(r,null,kf,kp)}),fw=Ls.reduce(function(a,L){return a+L.w},0)+HG*2*(Ls.length-1),fh=Math.max.apply(null,Ls.map(function(L){return L.h}));
-    var nT=sd.trans.length,per=nT?Math.max(1,Math.min(nT,Math.floor((Math.max(fw,4*MW+3*MG)+MG)/(MW+MG)))):0;
-    var sw=Math.max(fw,nT?per*(MW+MG)-MG:0),y=SUBTOP;
-    if(nT){var rows=Math.ceil(nT/per),sy=y+STRIPTOP;
-      sd.trans.forEach(function(id,i){var r=Math.floor(i/per),c=i%per,rc=Math.min(per,nT-r*per),rw=rc*(MW+MG)-MG,ox=x+SUBPAD+(sw-rw)/2;out.cards.push({id:id,key:kp+'t:'+id,x:ox+c*(MW+MG),y:sy+r*(MH+MG),w:MW,h:MH,mini:true})});
-      var stH=STRIPTOP+rows*(MH+MG)-MG+12;out.bands.push({key:kp+'strip:'+sk,x:x+SUBPAD-10,y:y-6,w:sw+20,h:stH,label:'Liderança e áreas transversais',sub:'',tone:'strip',strip:true});y+=stH+28}
-    var fx=x+SUBPAD+(sw-fw)/2;Ls.forEach(function(L){addLayout(out,L,fx,y);fx+=L.w+HG*2});
-    var h=y+fh+SUBPAD;hmax=Math.max(hmax,h);
-    out.bands.push({key:kp+'side:'+sk,x:x,y:0,w:sw+2*SUBPAD,h:h,label:sk==='CN'?'China':'Brasil',sub:sk==='CN'?'Execução e R&D':'Negócio e produto',tone:sk==='CN'?'cn':'br',flag:sk,side2:true});
-    x+=sw+2*SUBPAD+SIDEGAP});
-  out.bands.forEach(function(b){if(b.side2)b.h=hmax});
-  if(S.settings.showLinks){var pos=new Map(out.cards.filter(function(c){return!c.mini}).map(function(c){return[c.id,c]})),done=new Set();
-    matched.forEach(function(id){funcOf(id).forEach(function(l){var a=pos.get(id),b=pos.get(l),k=[id,l].sort().join('>');if(!a||!b||done.has(k))return;done.add(k);
-      var sa=byId.get(sideRoot(id,kf,matched)).country==='CN',sb=byId.get(sideRoot(l,kf,matched)).country==='CN';if(sa===sb)return;
-      var L1=a.x<b.x?a:b,R1=a.x<b.x?b:a;out.paths.push({key:kp+'f:'+k,from:id,to:l,kind:'func',curve:true,pts:[[L1.x+L1.w,L1.y+L1.h/2],[R1.x,R1.y+R1.h/2]]})})})}
-  out.w=Math.max(0,x-SIDEGAP);out.h=hmax;return out;
+  var par=new Map(),kind=new Map();
+  function upChain(x){var a=[],p=par.get(x),k=0;while(p&&k<500){a.push(p);p=par.get(p);k++}return a}
+  function canAttach(x,to){return to&&to!==x&&upChain(to).indexOf(x)<0}
+  matched.forEach(function(id){var n=byId.get(id),p=n.parent;while(p&&!matched.has(p)){var pn=byId.get(p);p=pn?pn.parent:null}par.set(id,p||null);kind.set(id,'solid')});
+  var ord=function(a,b){return(order.get(a)||0)-(order.get(b)||0)};
+  var ids=Array.from(matched).sort(ord);
+  ids.forEach(function(id){var n=byId.get(id);if(n.buUnder&&matched.has(n.buUnder)&&canAttach(id,n.buUnder)){par.set(id,n.buUnder);kind.set(id,'bu')}});
+  ids.forEach(function(id){if(par.get(id))return;var c=funcOf(id).filter(function(x){return matched.has(x)}).sort(function(a,b){return(byId.get(a).country==='CN')-(byId.get(b).country==='CN')||ord(a,b)});
+    for(var i=0;i<c.length;i++){if(canAttach(id,c[i])){par.set(id,c[i]);kind.set(id,'func');break}}});
+  var roots=ids.filter(function(id){return!par.get(id)}),lead={},sideOf=function(x){return byId.get(x).country==='CN'?'CN':'BR'};
+  function sideSize(r){var sk=sideOf(r),k=0;par.forEach(function(p,x){if(x!==r&&sideOf(x)===sk&&upChain(x).indexOf(r)>=0)k++});return k}
+  ['BR','CN'].forEach(function(sk){var cs=ids.filter(function(x){return sideOf(x)===sk&&byId.get(x).kind!=='team'});if(cs.length)lead[sk]=cs.sort(function(a,b){return sideSize(b)-sideSize(a)||depth(a)-depth(b)||ord(a,b)})[0]});
+  roots.forEach(function(r){var sk=sideOf(r);if(lead[sk]&&lead[sk]!==r&&canAttach(r,lead[sk])){par.set(r,lead[sk]);kind.set(r,'bu')}});
+  if(lead.CN&&lead.BR&&!par.get(lead.CN)&&canAttach(lead.CN,lead.BR)){par.set(lead.CN,lead.BR);kind.set(lead.CN,'func')}
+  var bk=new Map();ids.forEach(function(id){var k=par.get(id)||'__root';if(!bk.has(k))bk.set(k,[]);bk.get(k).push(id)});
+  return{matched:matched,par:par,kind:kind,bk:bk};
 }
-function sideRoot(id,kf,matched){var n=byId.get(id),p=n.parent;var cur=id;while(p){if(matched.has(p))cur=p;var pn=byId.get(p);p=pn?pn.parent:null}return cur}
+function buBlockLayout(bu,kp){
+  var T=buTree(bu),rep=new Map();
+  T.matched.forEach(function(id){var n=byId.get(id),bp=T.par.get(id)||null;if(n.parent&&bp!==n.parent&&byId.get(n.parent))rep.set(kp+id,label(byId.get(n.parent)))});
+  var kf=function(id){return T.bk.get(id)||[]};
+  var out={cards:[],paths:[],bands:[],rep:rep,count:T.matched.size},x=0,h=0;
+  kf('__root').slice().sort(function(a,b){return(byId.get(a).country==='CN')-(byId.get(b).country==='CN')||depth(a)-depth(b)}).forEach(function(r){var L=layoutRoot(r,null,kf,kp);
+    L.paths.forEach(function(p){var k=T.kind.get(p.to);if(k&&k!=='solid')p.kind=k});addLayout(out,L,x,0);x+=L.w+HG*3;h=Math.max(h,L.h)});
+  out.w=Math.max(0,x-HG*3);out.h=h;return out;
+}
 function sceneBU(bu){
   var list=bu==='__all'?S.bus.map(function(b){return b.id}):[bu],sc={cards:[],paths:[],bands:[],rep:new Map()},x=0;
   list.forEach(function(b){var kp=bu==='__all'?b+'|':'',L=buBlockLayout(b,kp),bd=busById.get(b);if(!L.cards.length||!bd)return;
@@ -725,7 +723,7 @@ function render(){
   var pseen=new Set();
   SC.paths.forEach(function(p){var el=pathEls.get(p.key),fresh=!el;
     if(!el){el=document.createElementNS('http://www.w3.org/2000/svg','path');pathEls.set(p.key,el);svg.appendChild(el)}
-    var cx=SC.pos.get(p.to);el.setAttribute('class',(p.kind==='matrix'?'matrix ':'')+(p.kind==='func'?'func ':'')+((isDim(byId.get(p.from))||isDim(byId.get(p.to)))?'dim':'')+(cx&&cx.ctx?' ctx':''));
+    var cx=SC.pos.get(p.to);el.setAttribute('class',(p.kind==='matrix'?'matrix ':'')+(p.kind==='func'?'func ':'')+(p.kind==='bu'?'bulink ':'')+((isDim(byId.get(p.from))||isDim(byId.get(p.to)))?'dim':'')+(cx&&cx.ctx?' ctx':''));
     el.dataset.from=p.from;el.dataset.to=p.to;
     if(fresh&&!first){el.style.transition='none';el.style.opacity='0'}
     el.setAttribute('d',p.d);try{el.style.d='path("'+p.d+'")'}catch(e){}
@@ -1001,6 +999,7 @@ function fillPanel(){
   var ex=new Set([n.id].concat(descendants(n.id))),ordered=S.nodes.slice().sort(function(a,b){return order.get(a.id)-order.get(b.id)});
   $('#fParent').innerHTML='<option value="">Topo (sem reporte)</option>'+ordered.filter(function(o){return!ex.has(o.id)}).map(function(o){return'<option value="'+o.id+'"'+(o.id===n.parent?' selected':'')+'>'+esc(optLabel(o))+'</option>'}).join('');
   var exu=new Set([n.id].concat(descendants(n.id)));
+  $('#fBuUnder').innerHTML='<option value="">Automático</option>'+ordered.filter(function(o){return o.id!==n.id&&Array.isArray(o.bus)&&o.bus.length}).map(function(o){return'<option value="'+o.id+'"'+(o.id===n.buUnder?' selected':'')+'>'+esc(optLabel(o))+'</option>'}).join('');
   $('#fUnder').innerHTML='<option value="">— (mesmo lugar do reporte)</option>'+ordered.filter(function(o){return!exu.has(o.id)}).map(function(o){return'<option value="'+o.id+'"'+(o.id===n.under?' selected':'')+'>'+esc(optLabel(o))+'</option>'}).join('');
   var fl=funcOf(n.id);
   $('#fLinks').innerHTML=fl.length?fl.map(function(id){var o=byId.get(id);return'<button type="button" data-rm="'+id+'" aria-pressed="true" title="Remover relação"><span class="stamp demo">'+esc(initials(o))+'</span>'+esc(label(o))+' ×</button>'}).join(''):'<span class="help">Nenhuma relação funcional.</span>';
@@ -1022,6 +1021,7 @@ $('#fBus').addEventListener('click',function(e){var b=e.target.closest('button')
 $('#fHl').addEventListener('click',function(e){var b=e.target.closest('[data-hl]');if(!b)return;edit(function(n){n.hl=b.getAttribute('data-hl')||null});fillPanel()});
 $('#fHl').addEventListener('input',function(e){if(e.target.matches('[data-chl]'))edit(function(n){n.hl=e.target.value},true)});
 $('#fBusManage').onclick=openBusManager;
+$('#fBuUnder').addEventListener('change',function(){var v=$('#fBuUnder').value;edit(function(n){if(v)n.buUnder=v;else delete n.buUnder});fillPanel()});
 $('#fUnder').addEventListener('change',function(){var v=$('#fUnder').value;edit(function(n){if(v)n.under=v;else delete n.under});if(v&&!S.settings.matrix)toast('Ligue Exibir → Visão matricial para ver o card nessa posição.');fillPanel()});
 $('#pDupSim').onclick=function(){var n=byId.get(editing);if(!n)return;var nid=cloneSubtree(editing,'Simulação · '+label(n));closePanel();setTimeout(function(){focusOn(nid)},60);toast('Time de '+label(n)+' duplicado num bloco de simulação.')};
 $('#pClose').onclick=closePanel;
@@ -1029,7 +1029,7 @@ $('#pAddChild').onclick=function(){addChild(editing)};
 $('#pDelete').onclick=function(){var n=byId.get(editing);if(!n)return;var p=n.parent&&byId.get(n.parent),k=kids(n.id).length;
   $('#confirmBox').innerHTML='<div class="confirm"><span>Excluir <b>'+esc(label(n))+'</b>?'+(k?' Os '+k+' subordinados diretos passam a reportar a '+esc(p?label(p):'ninguém (topo)')+'.':'')+'</span><div><button type="button" class="btn" id="cYes" style="border-color:var(--cn);color:var(--cn)">Excluir</button><button type="button" class="btn ghost" id="cNo">Cancelar</button></div></div>';
   $('#cNo').onclick=function(){$('#confirmBox').innerHTML=''};
-  $('#cYes').onclick=function(){var id=editing;mutate(function(){S.nodes.forEach(function(o){if(o.parent===id)o.parent=n.parent;if(o.under===id)delete o.under;o.links=(o.links||[]).filter(function(l){return l!==id})});S.nodes=S.nodes.filter(function(o){return o.id!==id});S.shapes.forEach(function(s){if(s.cards)s.cards=s.cards.filter(function(c){return c!==id})})});closePanel();toast('Caixinha excluída. Use Desfazer para voltar.')}};
+  $('#cYes').onclick=function(){var id=editing;mutate(function(){S.nodes.forEach(function(o){if(o.parent===id)o.parent=n.parent;if(o.under===id)delete o.under;if(o.buUnder===id)delete o.buUnder;o.links=(o.links||[]).filter(function(l){return l!==id})});S.nodes=S.nodes.filter(function(o){return o.id!==id});S.shapes.forEach(function(s){if(s.cards)s.cards=s.cards.filter(function(c){return c!==id})})});closePanel();toast('Caixinha excluída. Use Desfazer para voltar.')}};
 
 /* ---------- shape format panel ---------- */
 var spanel=$('#spanel');
@@ -1089,11 +1089,11 @@ function modal(html){var m=document.createElement('div');m.className='modal-bg';
 function syncControls(){
   document.querySelectorAll('[data-view]').forEach(function(b){b.setAttribute('aria-pressed',b.dataset.view===S.settings.view?'true':'false')});
   document.querySelectorAll('[data-filter]').forEach(function(b){b.setAttribute('aria-pressed',b.dataset.filter===S.settings.filter?'true':'false')});
-  $('#optScope').checked=!!S.settings.showScope;$('#optLinks').checked=!!S.settings.showLinks;$('#optMatrix').checked=!!S.settings.matrix;$('#optMerge').checked=!!S.settings.merge;$('#lgMatrix').hidden=!S.settings.matrix;$('#optBuTrans').checked=S.settings.buTrans!==false;
+  $('#optScope').checked=!!S.settings.showScope;$('#optLinks').checked=!!S.settings.showLinks;$('#optMatrix').checked=!!S.settings.matrix;$('#optMerge').checked=!!S.settings.merge;$('#lgMatrix').hidden=!S.settings.matrix;
   var bp=$('#buPick');bp.hidden=S.settings.view!=='bu';
   bp.innerHTML='<button type="button" data-bu="__all" aria-pressed="'+(S.settings.bu==='__all')+'">Todas</button>'+S.bus.map(function(b){return'<button type="button" data-bu="'+b.id+'" aria-pressed="'+(S.settings.bu===b.id)+'"><i style="background:'+b.color+'"></i>'+esc(b.name)+'</button>'}).join('')+'<button type="button" class="eo" data-bu="__manage" title="Gerenciar BUs">⚙</button>';
   $('#legendBus').innerHTML=S.bus.map(function(b){return'<span class="tag" style="--tc:'+b.color+'">'+esc(b.name)+'</span>'}).join('');
-  $('#hint').textContent=EDIT?'Arraste um card: no centro de outro = reporta a ele · em cima/embaixo = empilha · nas laterais = nova coluna · arraste o título do bloco para movê-lo':(S.settings.view==='bu'?'Visão por BU · cada pessoa liga ao chefe mais próximo da mesma BU · "reporta a" mostra o chefe real':'Clique em um líder para recolher ou expandir · passe o mouse nos carimbos · Ctrl + rolagem para zoom');
+  $('#hint').textContent=EDIT?'Arraste um card: no centro de outro = reporta a ele · em cima/embaixo = empilha · nas laterais = nova coluna · arraste o título do bloco para movê-lo':(S.settings.view==='bu'?'Visão por BU · só quem tem o rótulo da BU · linha tracejada ou pontilhada = ligação na BU, não reporte':'Clique em um líder para recolher ou expandir · passe o mouse nos carimbos · Ctrl + rolagem para zoom');
 }
 function setSetting(k,v,refit){S.settings[k]=v;if(k==='matrix')index();render();if(refit)setTimeout(function(){fit(true)},30)}
 document.querySelectorAll('[data-view]').forEach(function(b){b.onclick=function(){if(S.settings.view!==b.dataset.view)setSetting('view',b.dataset.view,true)}});
@@ -1103,7 +1103,7 @@ $('#optScope').onchange=function(){setSetting('showScope',this.checked,true)};
 $('#optLinks').onchange=function(){setSetting('showLinks',this.checked)};
 $('#optMatrix').onchange=function(){setSetting('matrix',this.checked,true)};
 $('#optMerge').onchange=function(){setSetting('merge',this.checked,true)};
-$('#optBuTrans').onchange=function(){setSetting('buTrans',this.checked,S.settings.view==='bu')};
+
 $('#btnBlock').onclick=addBlock;
 $('#btnAdd').onclick=function(){addChild(editing||null)};
 $('#btnUndo').onclick=undo;
@@ -1227,7 +1227,7 @@ function drawScene(ctx,sc,T){
   sc.bands.forEach(function(b){rr(ctx,b.x,b.y,b.w,b.h,b.strip?12:18);if(!b.strip){ctx.fillStyle=b.side2?T.bg:T.band;ctx.fill()}ctx.strokeStyle=b.sim?T.accent:b.strip?T.line:b.tone==='bu'?(b.color||T.bandEdge):T.bandEdge;ctx.lineWidth=b.sim||b.tone==='bu'?1.5:1;if(b.sim||b.strip)ctx.setLineDash([7,5]);ctx.stroke();ctx.setLineDash([]);
     var x=b.x+18,y=b.y+(b.strip?8:16);ctx.textBaseline='top';if(b.flag){drawFlag(ctx,b.flag,x,y);x+=22}ctx.font=(b.strip?'500 10px ':'600 11px ')+MONO;ctx.fillStyle=b.tone==='br'?T.br:b.tone==='cn'?T.cn:b.tone==='sim'?T.accent:b.tone==='bu'?(b.color||T.fg):b.strip?T.faint:T.fg;var lbl=b.label.toUpperCase();ctx.fillText(lbl,x,y);x+=ctx.measureText(lbl).width+10;ctx.font='500 11px '+MONO;ctx.fillStyle=T.muted;ctx.fillText((b.sub||'').toUpperCase(),x,y)});
   drawShapesCanvas(ctx,sc,T,'bottom');
-  sc.paths.forEach(function(p){var c=sc.pos.get(p.to);ctx.save();ctx.globalAlpha=(isDim(byId.get(p.from))||isDim(byId.get(p.to))||(c&&c.ctx))?.25:1;ctx.lineWidth=1.5;ctx.strokeStyle=p.kind==='matrix'||p.kind==='func'?T.link:T.lineStrong;if(p.kind==='matrix'||p.kind==='func'){ctx.setLineDash([2,5]);ctx.lineCap='round';ctx.lineWidth=1.8}ctx.stroke(new Path2D(p.d));ctx.restore()});
+  sc.paths.forEach(function(p){var c=sc.pos.get(p.to);ctx.save();ctx.globalAlpha=(isDim(byId.get(p.from))||isDim(byId.get(p.to))||(c&&c.ctx))?.25:1;ctx.lineWidth=1.5;ctx.strokeStyle=p.kind==='matrix'||p.kind==='func'?T.link:T.lineStrong;if(p.kind==='matrix'||p.kind==='func'){ctx.setLineDash([2,5]);ctx.lineCap='round';ctx.lineWidth=1.8}if(p.kind==='bu')ctx.setLineDash([7,5]);ctx.stroke(new Path2D(p.d));ctx.restore()});
   sc.cards.forEach(function(c){drawCard(ctx,c,T,sc)});
   drawShapesCanvas(ctx,sc,T,'top');
 }
@@ -1314,7 +1314,7 @@ function drawSlide(pptx,sl,H){
     s.addText((b.label+(b.sub?'  ·  '+b.sub:'')).toUpperCase(),{x:X(b.x+14),y:Y(b.y+8),w:L(Math.min(b.w-28,700)),h:L(22),fontSize:pt(10.5),fontFace:'Consolas',color:b.tone==='br'?H.br:b.tone==='cn'?H.cn:b.tone==='sim'?H.accent:b.tone==='bu'?hx(b.color||'#888888'):b.strip?H.faint:H.fg,bold:true,margin:0,valign:'top'})});
   shapesLayer('bottom');
   sc.paths.forEach(function(p){var pts=simplify(p.pts),c=sc.pos.get(p.to),dim=isDim(byId.get(p.from))||isDim(byId.get(p.to))||(c&&c.ctx);
-    for(var i=0;i<pts.length-1;i++)seg(pts[i],pts[i+1],{line:{color:p.kind==='matrix'||p.kind==='func'?H.link:H.lineStrong,width:p.kind==='matrix'||p.kind==='func'?1.25:1,dashType:p.kind==='matrix'||p.kind==='func'?'sysDot':'solid',transparency:dim?70:0}})});
+    for(var i=0;i<pts.length-1;i++)seg(pts[i],pts[i+1],{line:{color:p.kind==='matrix'||p.kind==='func'?H.link:H.lineStrong,width:p.kind==='matrix'||p.kind==='func'?1.25:1,dashType:p.kind==='matrix'||p.kind==='func'?'sysDot':p.kind==='bu'?'dash':'solid',transparency:dim?70:0}})});
   sc.cards.forEach(function(c){
     var n=byId.get(c.id),md=cardModel(n,{sc:sc,key:c.key||c.id,mini:c.mini}),d=depth(c.id),dim=isDim(n)?75:c.ctx?55:0;
     var lead=d<=1&&n.status==='ok'&&n.kind==='person';
