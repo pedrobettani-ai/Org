@@ -1066,6 +1066,7 @@ document.addEventListener('keydown',function(e){
 var tt;function toast(m){var t=$('#toast');t.textContent=m;t.hidden=false;clearTimeout(tt);tt=setTimeout(function(){t.hidden=true},3200)}
 function setBarH(){var b=document.querySelector('.bar');if(b)document.documentElement.style.setProperty('--bar-h',b.offsetHeight+'px')}setBarH();try{new ResizeObserver(setBarH).observe(document.querySelector('.bar'))}catch(e){}
 window.addEventListener('resize',function(){setBarH();clearTimeout(window._rz);window._rz=setTimeout(function(){fit(false)},150)});
+window.addEventListener('pagehide',function(){if(dirty&&draftOn){clearTimeout(draftT);try{localStorage.setItem(DKEY,JSON.stringify({base:CUR,baseName:S.name,savedAt:new Date().toISOString(),data:snapshotObj(S.name,S.createdAt)}))}catch(e){}}});
 window.addEventListener('beforeunload',function(e){if(dirty){e.preventDefault();e.returnValue=''}});
 
 /* ---------- versions ---------- */
@@ -1086,7 +1087,7 @@ function renderVerMenu(){
   $('#verMenu').innerHTML=(VERS.length?VERS.map(function(v){return'<button type="button" data-ver="'+esc(v.file)+'"'+(v.file===CUR?' aria-current="true"':'')+'>'+(v.file===CUR?'● ':'')+esc(v.name)+'<small>'+esc(v.date||v.file)+'</small></button>'}).join(''):'<div class="help" style="padding:8px 10px">Nenhuma versão publicada ainda.</div>')+'<hr><button type="button" class="eo" data-ver="__new"><b>+ Gerar nova versão…</b><small>Salva o estado atual como uma versão nomeada</small></button>';
 }
 $('#verMenu').addEventListener('click',function(e){var b=e.target.closest('[data-ver]');if(!b)return;$('#verMenu').hidden=true;var f=b.getAttribute('data-ver');if(f==='__new'){newVersion();return}if(f===CUR)return;
-  var go=function(){toast('Carregando versão…');fetchVersion(f).then(function(D){load(D,f);try{history.replaceState(null,'','#v='+encodeURIComponent(f))}catch(e){}toast('Versão carregada: '+S.name)}).catch(function(){toast('Não foi possível abrir essa versão agora. Tente de novo em instantes.')})};
+  var go=function(){clearDraft();toast('Carregando versão…');fetchVersion(f).then(function(D){load(D,f);try{history.replaceState(null,'','#v='+encodeURIComponent(f))}catch(e){}toast('Versão carregada: '+S.name)}).catch(function(){toast('Não foi possível abrir essa versão agora. Tente de novo em instantes.')})};
   if(dirty){var m=modal('<h2>Descartar alterações?</h2><p>Há alterações que ainda não viraram versão. Se trocar agora, elas se perdem.</p><div class="row"><button type="button" class="btn" id="dGo" style="border-color:var(--cn);color:var(--cn)">Descartar e trocar</button><button type="button" class="btn ghost" id="dNo">Continuar editando</button></div>');m.querySelector('#dGo').onclick=function(){m.remove();go()};m.querySelector('#dNo').onclick=function(){m.remove()}}else go()});
 function slug(s){return(s||'versao').normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'').slice(0,48)||'versao'}
 function newVersion(){
@@ -1096,7 +1097,7 @@ function newVersion(){
   var go=function(){var name=inp.value.trim();if(!name){m.querySelector('#vErr').textContent='Dê um nome para a versão.';return}
     var d=new Date(),p=function(x){return String(x).padStart(2,'0')};
     var file=d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate())+'-'+p(d.getHours())+p(d.getMinutes())+'-'+slug(name)+'.json';
-    var snapObj={schema:2,name:name,createdAt:d.toISOString(),settings:{view:S.settings.view,bu:S.settings.bu,showScope:S.settings.showScope,showLinks:S.settings.showLinks,filter:'all',matrix:!!S.settings.matrix,merge:!!S.settings.merge},bus:S.bus,nodes:S.nodes,shapes:S.shapes};
+    var snapObj=snapshotObj(name,d.toISOString());
     saveFile(file,new Blob([JSON.stringify(snapObj,null,1)],{type:'application/json'}));
     var up='https://github.com/'+OWNER+'/'+REPO+'/upload/main/versoes';
     m.querySelector('.modal').innerHTML='<div class="k">Versões</div><h2>Arquivo gerado</h2><p>Baixamos <b>'+esc(file)+'</b>. Para publicar:</p><ol class="steps"><li>Abra <a href="'+up+'" target="_blank" rel="noopener">a pasta de versões no GitHub</a>.</li><li>Arraste o arquivo baixado para a página.</li><li>Clique em <b>Commit changes</b>.</li></ol><p>Em um ou dois minutos a versão aparece no menu <b>Versão</b> para todo mundo que abrir o link.</p><div class="row"><button type="button" class="btn primary" id="vDone">Entendi</button></div>';
@@ -1105,7 +1106,21 @@ function newVersion(){
   };
   m.querySelector('#vOk').onclick=go;inp.addEventListener('keydown',function(e){if(e.key==='Enter')go()});
 }
-function updateSave(){var s=$('#saveState');s.hidden=!EDIT;s.textContent=dirty?'Alterações sem versão':'Sem alterações';s.className='pill eo'+(dirty?' dirty':'')}
+function snapshotObj(name,at){return{schema:2,name:name,createdAt:at,settings:{view:S.settings.view,bu:S.settings.bu,showScope:S.settings.showScope,showLinks:S.settings.showLinks,filter:'all',matrix:!!S.settings.matrix,merge:!!S.settings.merge},bus:S.bus,nodes:S.nodes,shapes:S.shapes}}
+/* ---------- draft autosave (this browser only) ---------- */
+var DKEY='orgchart-draft-'+OWNER+'/'+REPO,draftT=null,draftOn=false;
+function contentKey(o){return JSON.stringify({b:o.bus,n:o.nodes,s:o.shapes})}
+function persistDraft(){if(!draftOn||!S)return;clearTimeout(draftT);draftT=setTimeout(function(){try{localStorage.setItem(DKEY,JSON.stringify({base:CUR,baseName:S.name,savedAt:new Date().toISOString(),data:snapshotObj(S.name,S.createdAt)}))}catch(e){}},400)}
+function clearDraft(){clearTimeout(draftT);try{localStorage.removeItem(DKEY)}catch(e){}}
+function readDraft(){try{var d=JSON.parse(localStorage.getItem(DKEY)||'null');return d&&d.data&&Array.isArray(d.data.nodes)?d:null}catch(e){return null}}
+function offerDraft(){
+  draftOn=true;var d=readDraft();if(!d)return;
+  if(contentKey(normalize(d.data))===contentKey(S)){clearDraft();return}
+  var m=modal('<div class="k">Rascunho</div><h2>Continuar de onde parou?</h2><p>Encontramos alterações que ainda não viraram versão, salvas neste navegador em <b>'+esc(fmtDate(d.savedAt))+'</b>'+(d.baseName?', feitas a partir da versão <b>'+esc(d.baseName)+'</b>':'')+'.</p><div class="row"><button type="button" class="btn primary" id="drOk">Restaurar rascunho</button><button type="button" class="btn ghost" id="drNo" style="color:var(--cn)">Descartar</button></div>');
+  m.querySelector('#drOk').onclick=function(){m.remove();load(d.data,d.base);dirty=true;setEdit(true);updateSave();toast('Rascunho restaurado. Clique em Gerar versão para publicar.')};
+  m.querySelector('#drNo').onclick=function(){m.remove();clearDraft();toast('Rascunho descartado.')};
+}
+function updateSave(){if(dirty)persistDraft();var s=$('#saveState');s.hidden=!EDIT;s.textContent=dirty?'Alterações sem versão':'Sem alterações';s.className='pill eo'+(dirty?' dirty':'')}
 $('#btnSave').onclick=newVersion;
 
 /* ---------- export helpers ---------- */
@@ -1273,9 +1288,9 @@ setEdit(false);
 listVersions().then(function(list){VERS=list;var want=(location.hash.match(/v=([^&]+)/)||[])[1];want=want?decodeURIComponent(want):null;
   var pick=(want&&list.find(function(v){return v.file===want}))||list[0];
   list.forEach(function(v){if(!v.named&&v.file!==(pick&&pick.file))fetchVersion(v.file).then(function(D){if(D&&D.name){v.name=D.name;renderVerMenu()}}).catch(function(){})});
-  if(!pick){renderVerMenu();return}
-  return fetchVersion(pick.file).then(function(D){if(dirty){CUR=CUR;renderVerMenu();return}load(D,pick.file)}).catch(function(){renderVerMenu()});
-});
+  if(!pick){renderVerMenu();offerDraft();return}
+  return fetchVersion(pick.file).then(function(D){if(dirty){renderVerMenu();return}load(D,pick.file)}).catch(function(){renderVerMenu()}).then(offerDraft);
+}).catch(offerDraft);
 window.__org={get S(){return S},load:load,scene:scene,focus:focusOn,get SC(){return SC},get V(){return V}};
 })();
 
