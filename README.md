@@ -14,9 +14,14 @@ Acesse o endereço do GitHub Pages deste repositório. O site abre em modo apres
 4. Para organizar o time de um gestor, arraste um card: soltar **em cima ou embaixo** de um colega empilha na mesma coluna, soltar **nas laterais** abre uma nova coluna e soltar **no centro** de um card faz a pessoa reportar a ele. O botão ⇅/⇄ no card do gestor alterna o time inteiro entre vertical e horizontal.
 5. **+ Bloco** cria um bloco de simulação em branco. **Duplicar como simulação**, no painel do card, copia o time de alguém para um bloco novo. Arraste a faixa de título do bloco para posicioná-lo no canvas, e use ⋯ para renomear ou excluir.
 
+## Visão por BU
+
+Escolha **Por BU** e a BU (ou **Todas**, que coloca as BUs lado a lado). Cada BU vira um bloco com Brasil à esquerda e China à direita. Aparece só quem tem o rótulo da BU, ligado ao chefe mais próximo que também é da BU; quando o chefe real ficou de fora, o card mostra "↳ reporta a …". Quem atende todas as BUs fica numa faixa no topo, e as relações funcionais entre Brasil e China aparecem como linha pontilhada. Quem tem duas BUs aparece no desenho de cada uma.
+
 ## Opções de exibição (menu Exibir)
 
 - **Visão matricial:** mostra cada card junto do par definido em "Visão matricial · exibir junto de", com linha pontilhada. O reporte real aparece no card.
+- **Liderança transversal na visão por BU:** mostra ou esconde a faixa com quem atende todas as BUs.
 - **Unir blocos:** junta Brasil, China e simulações num desenho só, sem molduras.
 
 ## Como publicar uma nova versão
